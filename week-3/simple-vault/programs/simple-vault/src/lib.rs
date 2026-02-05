@@ -13,4 +13,8 @@ pub mod simple_vault {
         ctx.accounts.initialize_handler(&ctx.bumps)?;
         Ok(())
     }
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        ctx.accounts.deposit_handler(amount)?;
+        Ok(())
+    }
 }
