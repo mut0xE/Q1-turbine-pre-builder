@@ -5,4 +5,6 @@ pub enum VaultError {
     Unauthorized,
     #[msg("The vault does not have enough funds")]
     InsufficientFunds,
+    #[msg("The User amount is invalid")]
+    InvalidAmount,
 }

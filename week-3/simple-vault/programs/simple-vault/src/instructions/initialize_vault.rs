@@ -3,7 +3,10 @@ use anchor_lang::{
     system_program::{transfer, Transfer},
 };
 
-use crate::state::VaultState;
+use crate::{
+    constants::{VAULT_SEED, VAULT_STATE_SEED},
+    state::VaultState,
+};
 #[derive(Accounts)]
 pub struct InitializeAccounts<'info> {
     #[account(mut)]
@@ -13,13 +16,13 @@ pub struct InitializeAccounts<'info> {
         init,
         payer=signer,
         space=VaultState::DISCRIMINATOR.len()+VaultState::INIT_SPACE,
-        seeds=[b"vault_state",signer.key().as_ref()],bump
+        seeds=[VAULT_STATE_SEED,signer.key().as_ref()],bump
     )]
     pub vault_state: Account<'info, VaultState>,
 
     #[account(
         mut,
-        seeds=[b"vault",signer.key().as_ref(),vault_state.key().as_ref()],
+        seeds=[VAULT_SEED,signer.key().as_ref(),vault_state.key().as_ref()],
         bump)]
     pub vault: SystemAccount<'info>,
 

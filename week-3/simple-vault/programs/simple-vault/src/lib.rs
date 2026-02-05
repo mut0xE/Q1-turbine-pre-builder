@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 declare_id!("CmKVpLqQ7C5kGpWuQ6EiivXsEprdgfhk96rDtj4daavr");
+mod constants;
 mod error;
 mod instructions;
 mod state;
@@ -15,6 +16,14 @@ pub mod simple_vault {
     }
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         ctx.accounts.deposit_handler(amount)?;
+        Ok(())
+    }
+    pub fn withdraw(ctx: Context<WithdrawAccounts>, amount: u64) -> Result<()> {
+        ctx.accounts.withdraw_handler(amount)?;
+        Ok(())
+    }
+    pub fn close(ctx: Context<CloseAccounts>) -> Result<()> {
+        ctx.accounts.close_handler()?;
         Ok(())
     }
 }
