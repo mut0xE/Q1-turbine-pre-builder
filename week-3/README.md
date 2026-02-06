@@ -17,7 +17,7 @@ The Vault program lets users safely store **SOL** on-chain.
 The Vault program uses **Program Derived Addresses (PDAs)** to manage vaults securely.  
 Each user has two PDAs associated with their vault.
 
-### 1.Vault State PDA
+### 1. Vault State PDA
 
 **Purpose:** Stores vault metadata and configuration
 
@@ -31,7 +31,7 @@ Each user has two PDAs associated with their vault.
 - Type: SystemAccount
 
 ## Instructions
-### 1.Initialize Vault
+### 1. Initialize Vault
 
 **Purpose:** Set up a new vault for the user
 
@@ -40,7 +40,7 @@ Each user has two PDAs associated with their vault.
 - Transfers rent-exempt amount to vault
 - Stores creator pubkey and PDA bump values
 
-### 2.Deposit
+### 2. Deposit
 
 **Purpose:** Add SOL to the vault
 
@@ -54,7 +54,7 @@ Each user has two PDAs associated with their vault.
 **Fee Structure:**
 - Transaction fee: ~5,000 lamports
 
-### 3.Withdraw
+### 3. Withdraw
 
 **Purpose:** Remove SOL from the vault
 
@@ -72,7 +72,7 @@ Each user has two PDAs associated with their vault.
 - Amount is valid and non-zero
 - PDA signature verification succeeds
 
-### 4.Close
+### 4. Close
 
 **Purpose:** Close the vault and recover rent-exempt reserves
 
@@ -103,40 +103,32 @@ The Vault program includes custom error handling to ensure safe and correct exec
 - Withdraw 2 SOL from the vault! (Should Fail)
 - Deposit 0 SOL into the vault! (Should Fail)
 - Close the vault
-- 
+
 ![VAULT TEST](./images/vault_tests.png)
 
 ### Devnet Information
 
 - **Program ID:** `CmKVpLqQ7C5kGpWuQ6EiivXsEprdgfhk96rDtj4daavr`
-- **Network*:* Devnet
+- **Network:** Devnet
 
 ## Example Transactions (Devnet)
 
 ### Initialize Vault
 
-### **Deposit Transaction**
-
-[View Deposit Transaction](https://orbmarkets.io/tx/23TDszxGWakVBm1S5W9jkMkqnUQXTUNifct9dB4uaqzRYbdRBjTnNTdKpAHqSfo6sfNwfhdEXKJxbu5cQkhG5TaU?cluster=devnet
+[View Initialize Transaction](https://orbmarkets.io/tx/23TDszxGWakVBm1S5W9jkMkqnUQXTUNifct9dB4uaqzRYbdRBjTnNTdKpAHqSfo6sfNwfhdEXKJxbu5cQkhG5TaU?cluster=devnet
 )
 
 ### Deposit SOL
-
-### **Deposit Transaction**
 
 [View Deposit Transaction](https://orbmarkets.io/tx/5ncHinEc5jVpij8fr4h9kmF5hNTqexdXgi3U8HPQRaVN2ZxNKwQqeFPTkVEgYW6wDYhQ8quvpMVZGrJggphX7hnn?cluster=devnet
 )
 
 ### Withdraw SOL
 
-### **Withdraw Transaction**
-
 [View Withdraw Transaction](https://orbmarkets.io/tx/4Dti1DWh2XB5bHpYY8nsSjP4y8wtHn6jNRVChbxpjpqhxZUJR9qRdjgCA8W9j51ykkzmBSK83cmioUsqrJjXRiHA?cluster=devnet
 )
 
 ### Close Vault
-
-### **Close Transaction**
 
 [View Close Transaction](https://orbmarkets.io/tx/1YjK6T4aawM9bXx1DLt67VaUndAaEaj9i2sQsdX6NnvwqDcEkRzmXkwBViwz98WXdRj6HcEJQRUTjybf3KM3vnN?cluster=devnet)
 
