@@ -17,13 +17,13 @@ The Vault program lets users safely store **SOL** on-chain.
 The Vault program uses **Program Derived Addresses (PDAs)** to manage vaults securely.  
 Each user has two PDAs associated with their vault.
 
-### 1. Vault State PDA
+## 1. Vault State PDA
 
 **Purpose:** Stores vault metadata and configuration
 
 - Seed: `["vault_state", creator_pubkey]`
 
-#### 2. Vault PDA
+## 2. Vault PDA
 
 **Purpose:** Holds the actual SOL tokens
 
@@ -31,7 +31,7 @@ Each user has two PDAs associated with their vault.
 - Type: SystemAccount
 
 ## Instructions
-### 1. Initialize Vault
+## 1. Initialize Vault
 
 **Purpose:** Set up a new vault for the user
 
@@ -40,7 +40,7 @@ Each user has two PDAs associated with their vault.
 - Transfers rent-exempt amount to vault
 - Stores creator pubkey and PDA bump values
 
-### 2. Deposit
+## 2. Deposit
 
 **Purpose:** Add SOL to the vault
 
@@ -54,7 +54,7 @@ Each user has two PDAs associated with their vault.
 **Fee Structure:**
 - Transaction fee: ~5,000 lamports
 
-### 3. Withdraw
+## 3. Withdraw
 
 **Purpose:** Remove SOL from the vault
 
@@ -72,7 +72,7 @@ Each user has two PDAs associated with their vault.
 - Amount is valid and non-zero
 - PDA signature verification succeeds
 
-### 4. Close
+## 4. Close
 
 **Purpose:** Close the vault and recover rent-exempt reserves
 
