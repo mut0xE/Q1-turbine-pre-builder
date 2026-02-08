@@ -1,8 +1,8 @@
 use anchor_lang::prelude::error_code;
 #[error_code]
 pub enum EscrowError {
-    #[msg("Invalid payment mint decimals")]
-    InvalidPaymentMint,
+    #[msg("Invalid Amount")]
+    InvalidAmount,
 
     #[msg("Insufficient escrow balance")]
     InsufficientBalance,

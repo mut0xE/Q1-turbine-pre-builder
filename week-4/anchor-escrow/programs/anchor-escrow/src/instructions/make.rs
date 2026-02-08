@@ -29,29 +29,29 @@ pub struct MakerAccounts<'info> {
     pub escrow: Account<'info, Escrow>,
 
     #[account(mint::token_program=token_program)]
-    pub nft_mint: InterfaceAccount<'info, Mint>,
+    pub mint_a: InterfaceAccount<'info, Mint>,
 
     #[account(mint::token_program=token_program)]
-    pub payment_mint: InterfaceAccount<'info, Mint>,
+    pub mint_b: InterfaceAccount<'info, Mint>,
 
     // Vault: Associated Token Account owned by Escrow PDA
     #[account(
         init,
         payer=maker,
-        associated_token::mint=nft_mint,
+        associated_token::mint=mint_a,
         associated_token::authority=escrow,
         associated_token::token_program = token_program
     )]
     pub vault: InterfaceAccount<'info, TokenAccount>,
 
-    // Maker's NFT account
+    // Maker's token account for mint A
     #[account(
         mut,
-        associated_token::mint=nft_mint,
+        associated_token::mint=mint_a,
         associated_token::authority=maker,
         associated_token::token_program = token_program
     )]
-    pub maker_ata_nft: InterfaceAccount<'info, TokenAccount>,
+    pub maker_ata_a: InterfaceAccount<'info, TokenAccount>,
 
     pub token_program: Interface<'info, TokenInterface>,
     pub associated_token_program: Program<'info, AssociatedToken>,
@@ -66,8 +66,8 @@ impl<'info> MakerAccounts<'info> {
     ) -> Result<()> {
         self.escrow.set_inner(Escrow {
             maker: self.maker.key(),
-            nft_mint: self.nft_mint.key(),
-            payment_mint: self.payment_mint.key(),
+            mint_a: self.mint_a.key(),
+            mint_b: self.mint_b.key(),
             receive_amount: receive,
             status: EscrowStatus::Initialized,
             seed,
@@ -75,26 +75,27 @@ impl<'info> MakerAccounts<'info> {
         });
         Ok(())
     }
-    pub fn deposit_handler(&mut self) -> Result<()> {
+    pub fn deposit_handler(&mut self, deposit_amount: u64) -> Result<()> {
         require!(
             self.escrow.status == EscrowStatus::Initialized,
             EscrowError::InvalidStatus
         );
-        // Transfer the NFT from the maker to the vault
+        require!(deposit_amount > 0, EscrowError::InvalidAmount);
+        // Transfer the A from the maker to the vault
         let cpi_ctx = CpiContext::new(
             self.token_program.to_account_info(),
             TransferChecked {
-                from: self.maker_ata_nft.to_account_info(),
-                mint: self.nft_mint.to_account_info(),
+                from: self.maker_ata_a.to_account_info(),
+                mint: self.mint_a.to_account_info(),
                 to: self.vault.to_account_info(),
                 authority: self.maker.to_account_info(),
             },
         );
-        // NFTs have 0 decimals and we transfer exactly 1
-        transfer_checked(cpi_ctx, 1, self.nft_mint.decimals)?;
+
+        transfer_checked(cpi_ctx, deposit_amount, self.mint_a.decimals)?;
 
         // Update the escrow status
-        self.escrow.status = EscrowStatus::DepositedNft;
+        self.escrow.status = EscrowStatus::Deposited;
         Ok(())
     }
 }
