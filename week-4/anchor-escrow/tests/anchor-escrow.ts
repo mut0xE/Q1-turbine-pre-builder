@@ -40,10 +40,8 @@ describe("anchor-escrow", () => {
   const depositAmount = 1;
 
   const logTransactionResult = (label: string, txSignature: string) => {
-    console.log(`\n${label}`);
-    console.log(
-      `Txn signature: https://explorer.solana.com/transaction/${txSignature}?cluster=custom&customUrl=${provider.connection.rpcEndpoint}`
-    );
+    console.log(`\n${label}:`);
+    console.log(`Txn signature: ${txSignature}`);
   };
 
   before(async () => {
@@ -203,5 +201,57 @@ describe("anchor-escrow", () => {
       await provider.connection.getTokenAccountBalance(makerAtaPayment)
     ).value.uiAmount;
     expect(makerPaymentAccount).to.equal(receiveAmount);
+  });
+
+  it("Initializing Escrow, Vault, Deposit and Refund", async () => {
+    const seed = new BN(Math.floor(Math.random() * 1000));
+    [escrowPda, escrowBump] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("escrow"), seed.toBuffer("le", 8), maker.toBuffer()],
+      PROGRAM_ID
+    );
+    vault = getAssociatedTokenAddressSync(nftMint, escrowPda, true);
+    await mintTo(
+      provider.connection,
+      provider.wallet.payer,
+      nftMint,
+      makerAtaNft,
+      provider.wallet.payer,
+      1
+    );
+    await program.methods
+      .make(seed, new BN(receiveAmount * 1e6), new BN(depositAmount))
+      .accounts({
+        maker,
+        escrow: escrowPda,
+        mintA: nftMint,
+        mintB: paymentMint,
+        vault,
+        makerAtaA: makerAtaNft,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SYSTEM_PROGRAM,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    const tx_refund = await program.methods
+      .refund()
+      .accounts({
+        maker,
+        escrow: escrowPda,
+        mintA: nftMint,
+        vault,
+        makerAtaA: makerAtaNft,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SYSTEM_PROGRAM,
+      })
+      .rpc({ commitment: "confirmed" });
+    logTransactionResult("Refund", tx_refund);
+
+    const escrowInfo = await provider.connection.getAccountInfo(escrowPda);
+    expect(escrowInfo).to.be.null;
+
+    const vaultBalance = await provider.connection.getAccountInfo(vault);
+    expect(vaultBalance).to.be.null;
   });
 });

@@ -58,29 +58,48 @@ pub struct MakerAccounts<'info> {
     pub system_program: Program<'info, System>,
 }
 impl<'info> MakerAccounts<'info> {
-    pub fn initialize_escrow_handler(
+    pub fn make_handler(
         &mut self,
         seed: u64,
-        receive: u64,
+        receive_amount: u64,
+        deposit_amount: u64,
         bump: &MakerAccountsBumps,
     ) -> Result<()> {
+        //Initialize escrow
+        self.initialize_escrow(seed, receive_amount, bump)?;
+
+        //Deposit NFT
+        self.deposit_nft(deposit_amount)?;
+
+        Ok(())
+    }
+    fn initialize_escrow(
+        &mut self,
+        seed: u64,
+        receive_amount: u64,
+        bump: &MakerAccountsBumps,
+    ) -> Result<()> {
+        require!(receive_amount > 0, EscrowError::InvalidAmount);
+
         self.escrow.set_inner(Escrow {
             maker: self.maker.key(),
             mint_a: self.mint_a.key(),
             mint_b: self.mint_b.key(),
-            receive_amount: receive,
+            receive_amount,
             status: EscrowStatus::Initialized,
             seed,
             bump: bump.escrow,
         });
         Ok(())
     }
-    pub fn deposit_handler(&mut self, deposit_amount: u64) -> Result<()> {
+
+    fn deposit_nft(&mut self, deposit_amount: u64) -> Result<()> {
         require!(
             self.escrow.status == EscrowStatus::Initialized,
             EscrowError::InvalidStatus
         );
         require!(deposit_amount > 0, EscrowError::InvalidAmount);
+
         // Transfer the A from the maker to the vault
         let cpi_ctx = CpiContext::new(
             self.token_program.to_account_info(),

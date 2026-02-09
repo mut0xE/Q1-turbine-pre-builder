@@ -121,6 +121,10 @@ impl<'info> TakerAccounts<'info> {
     }
 
     fn transfer_nft(&mut self) -> Result<()> {
+        require!(
+            self.escrow.status == EscrowStatus::Deposited,
+            EscrowError::InvalidStatus
+        );
         let signer_seeds: &[&[&[u8]]] = &[&[
             ESCROW_SEED,
             &self.escrow.seed.to_le_bytes(),

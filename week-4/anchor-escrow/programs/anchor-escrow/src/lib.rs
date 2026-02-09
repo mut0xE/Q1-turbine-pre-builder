@@ -14,12 +14,17 @@ pub mod anchor_escrow {
 
     pub fn make(ctx: Context<MakerAccounts>, seed: u64, receive: u64, deposit: u64) -> Result<()> {
         ctx.accounts
-            .initialize_escrow_handler(seed, receive, &ctx.bumps)?;
-        ctx.accounts.deposit_handler(deposit)?;
+            .make_handler(seed, receive, deposit, &ctx.bumps)?;
         Ok(())
     }
+
     pub fn take(ctx: Context<TakerAccounts>) -> Result<()> {
         ctx.accounts.taker_handler()?;
+        Ok(())
+    }
+
+    pub fn refund(ctx: Context<RefundAccounts>) -> Result<()> {
+        ctx.accounts.refund_handler()?;
         Ok(())
     }
 }
