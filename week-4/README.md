@@ -82,7 +82,7 @@ The program includes custom error checks
 
 ## Testing
 
-![ESCROW TEST](./images/escrow_test.png)
+![Escrow Tests](./images/escrow_test.png)
 
 ### Devnet Information
 
@@ -106,9 +106,6 @@ The program includes custom error checks
 [View Withdraw Transaction](https://orbmarkets.io/tx/4L8vT1XYJWYHnRH8iSDVXhSCVetQp5upir6AU1G5qPwofZ9qkXpTRzB4CPkocoW7hpzCTCJJizpdP4ijgaMXzkNj?cluster=devnet
 )
 
-### Close Vault
-
-[View Close Transaction](https://orbmarkets.io/tx/1YjK6T4aawM9bXx1DLt67VaUndAaEaj9i2sQsdX6NnvwqDcEkRzmXkwBViwz98WXdRj6HcEJQRUTjybf3KM3vnN?cluster=devnet)
 
 ## Summary
 
